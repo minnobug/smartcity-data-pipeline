@@ -150,14 +150,14 @@ def has_reached_destination(current_location):
 
 
 def produce_to_kafka(producer, topic, data):
-    # send data to Kafka topic
     try:
         producer.produce(
             topic=topic,
+            key=str(data.get('deviceId', '')),
             value=json.dumps(data, default=json_serializer),
-            callback=delivery_report
+            on_delivery=delivery_report  #  callback → on_delivery
         )
-        producer.poll(0)  # Trigger delivery callbacks
+        producer.poll(0)
     except Exception as e:
         print(f'Error producing to {topic}: {e}')
 
