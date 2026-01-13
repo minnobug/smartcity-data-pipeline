@@ -12,16 +12,44 @@ __pycache__/
 *.pyo
 *.pyd
 .env
+.env.*
+*.env
 .venv/
 venv/
+ENV/
+env/
+*.egg-info/
+dist/
+build/
+
+# =========================
+# AWS Credentials
+# =========================
+*accessKeys.csv
+*_accessKeys.csv
+spark-kyosuke-user_accessKeys.csv
+*.pem
+*.key
+credentials
+.aws/
 
 # =========================
 # Logs
 # =========================
 *.log
+logs/
 
 # =========================
 # OS
 # =========================
 .DS_Store
 Thumbs.db
+
+# =========================
+# Temporary files
+# =========================
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
