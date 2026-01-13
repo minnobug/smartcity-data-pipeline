@@ -195,9 +195,9 @@ python jobs/main.py
 
 ## Roadmap
 
-- [x] IoT data simulation
-- [x] Kafka streaming
-- [x] Docker containerization
+- [ ] IoT data simulation
+- [ ] Kafka streaming
+- [ ] Docker containerization
 - [ ] Spark structured streaming
 - [ ] AWS S3 integration
 - [ ] Glue catalog setup
@@ -218,10 +218,12 @@ MIT License - see [LICENSE](LICENSE) file
 
 ## Contact
 
-project maintainer: [Minnobug]
-email: leq4482@gmail.com
-github: [@minnobug](https://github.com/minnobug)
+** Project Maintainer:** [Minnobug](https://github.com/minnobug)
+
+[![Email](https://img.shields.io/badge/Email-leg448%40gmail.com-red?style=for-the-badge&logo=gmail)](mailto:leg448@gmail.com)
+[![GitHub](https://img.shields.io/badge/GitHub-minnobug-181717?style=for-the-badge&logo=github)](https://github.com/minnobug)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/yourprofile)
 
 ---
 
-**Star this repository if you find it helpful!**
+** Thank you! Happy coding! **
