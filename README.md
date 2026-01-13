@@ -218,9 +218,10 @@ MIT License - see [LICENSE](LICENSE) file
 
 ## Contact
 
-**Project Maintainer:** [Minnobug]  
-**Email:** leq4482@gmail.com  
-**GitHub:** [@minnobug](https://github.com/minnobug) 
+project maintainer: [Minnobug]
+email: leq4482@gmail.com
+github: [@minnobug](https://github.com/minnobug)
+
 ---
 
 **Star this repository if you find it helpful!**
