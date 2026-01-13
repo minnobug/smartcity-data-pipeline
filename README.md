@@ -222,7 +222,7 @@ MIT License - see [LICENSE](LICENSE) file
 
 [![Email](https://img.shields.io/badge/Email-leg448%40gmail.com-red?style=for-the-badge&logo=gmail)](mailto:leg448@gmail.com)
 [![GitHub](https://img.shields.io/badge/GitHub-minnobug-181717?style=for-the-badge&logo=github)](https://github.com/minnobug)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/yourprofile)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/le-van-minh-2129s)
 
 ---
 
