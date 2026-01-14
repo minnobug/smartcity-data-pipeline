@@ -11,33 +11,47 @@ __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
-.env
-.env.*
-*.env
+
+# Virtual environments
 .venv/
 venv/
 ENV/
 env/
+
+# Packaging
 *.egg-info/
 dist/
 build/
 
 # =========================
-# AWS Credentials
+# Environment variables
 # =========================
+.env
+.env.*
+*.env
+
+# =========================
+# AWS / Secrets
+# =========================
+.aws/
 *accessKeys.csv
 *_accessKeys.csv
-spark-kyosuke-user_accessKeys.csv
 *.pem
 *.key
 credentials
-.aws/
 
 # =========================
 # Logs
 # =========================
 *.log
 logs/
+
+# =========================
+# Testing / Coverage
+# =========================
+.pytest_cache/
+.coverage
+htmlcov/
 
 # =========================
 # OS
