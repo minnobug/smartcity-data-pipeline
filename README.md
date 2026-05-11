@@ -75,7 +75,7 @@ kafka-topics --create --topic emergency_data --bootstrap-server localhost:9092 -
 exit
 
 # Run IoT simulator
-python jobs/main.py
+python jobs/iot_simulator.py
 ```
 
 ### Monitor Data
@@ -157,7 +157,7 @@ black jobs/
 ### Local Development
 ```bash
 docker-compose up -d
-python jobs/main.py
+python jobs/iot_simulator.py
 ```
 
 ### Production (AWS)
