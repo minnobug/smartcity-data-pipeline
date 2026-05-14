@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 
 # Load environment variables
-load_dotenv()
+load_dotenv('/opt/spark/jobs/.env')
 
 # AWS Configuration
 AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY")
