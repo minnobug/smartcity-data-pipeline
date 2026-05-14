@@ -10,10 +10,6 @@ BUCKET = "s3a://smartcity-data-pipeline"
 
 def main():
     spark = SparkSession.builder.appName("SmartCityStreaming") \
-        .config("spark.jars.packages",
-                "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1,"
-                "org.apache.hadoop:hadoop-aws:3.3.1,"
-                "com.amazonaws:aws-java-sdk:1.11.469") \
         .config("spark.hadoop.fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem") \
         .config("spark.hadoop.fs.s3a.access.key", configuration.get('AWS_ACCESS_KEY')) \
         .config("spark.hadoop.fs.s3a.secret.key", configuration.get('AWS_SECRET_KEY')) \
@@ -88,7 +84,8 @@ def main():
             .format('kafka')
             .option('kafka.bootstrap.servers', 'broker:29092')
             .option('subscribe', topic)
-            .option('startingOffsets', 'earliest')
+            .option('startingOffsets', 'latest')
+            .option('failOnDataLoss', 'false')
             .load()
             .selectExpr('CAST(value AS STRING)')
             .select(from_json(col('value'), schema).alias('data'))
@@ -125,7 +122,6 @@ def main():
         stream_writer(emergencyDF, 'emergency_data'),
     ]
 
-    # Chờ tất cả query, không chỉ query cuối
     for q in queries:
         q.awaitTermination()
 
