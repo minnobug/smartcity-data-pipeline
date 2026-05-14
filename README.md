@@ -25,7 +25,7 @@ IoT Devices → Kafka → Spark Streaming → S3 → Glue Catalog → Athena/Red
 ```
 
 **Components:**
-- **Ingestion:** Kafka + Zookeeper
+- **Ingestion:** Kafka + Zookeeper (Docker Compose)
 - **Processing:** Spark (1 master + 2 workers)
 - **Storage:** AWS S3 (data lake)
 - **Catalog:** AWS Glue
@@ -44,8 +44,6 @@ IoT Devices → Kafka → Spark Streaming → S3 → Glue Catalog → Athena/Red
 | Visualization | PowerBI |
 
 ## Quick Start
-git clone https://github.com/minnobug/smartcity-data-pipeline.git 
-cd smartcity-data-pipeline
 
 ### Prerequisites
 - Docker Desktop
@@ -56,7 +54,7 @@ cd smartcity-data-pipeline
 
 ```bash
 # Clone repository
-git clone <repository-url>
+git clone https://github.com/minnobug/smartcity-data-pipeline.git
 cd smartcity-data-pipeline
 
 # Install dependencies
@@ -67,11 +65,11 @@ docker-compose up -d
 
 # Create Kafka topics
 docker exec -it broker bash
-kafka-topics --create --topic vehicle_data --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
-kafka-topics --create --topic gps_data --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
-kafka-topics --create --topic traffic_data --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
-kafka-topics --create --topic weather_data --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
-kafka-topics --create --topic emergency_data --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+kafka-topics --create --topic vehicle_data --bootstrap-server broker:29092 --partitions 1 --replication-factor 1
+kafka-topics --create --topic gps_data --bootstrap-server broker:29092 --partitions 1 --replication-factor 1
+kafka-topics --create --topic traffic_data --bootstrap-server broker:29092 --partitions 1 --replication-factor 1
+kafka-topics --create --topic weather_data --bootstrap-server broker:29092 --partitions 1 --replication-factor 1
+kafka-topics --create --topic emergency_data --bootstrap-server broker:29092 --partitions 1 --replication-factor 1
 exit
 
 # Run IoT simulator
@@ -82,7 +80,7 @@ python jobs/iot_simulator.py
 
 ```bash
 # Console consumer
-docker exec -it broker kafka-console-consumer --bootstrap-server localhost:9092 --topic vehicle_data --from-beginning
+docker exec -it broker kafka-console-consumer --bootstrap-server broker:29092 --topic vehicle_data --from-beginning
 
 # Spark UI
 http://localhost:9090
@@ -106,7 +104,7 @@ docker exec -it spark-master spark-submit --master spark://spark-master:7077 /op
 }
 ```
 
-**Additional schemas:** GPS, Traffic Camera, Weather, Emergency Incident data (see `/docs/schemas.md`)
+Additional schemas: GPS, Traffic Camera, Weather, Emergency Incident — see `/docs/schemas.md`
 
 ## Project Structure
 
@@ -114,7 +112,7 @@ docker exec -it spark-master spark-submit --master spark://spark-master:7077 /op
 ├── docker-compose.yml      # Infrastructure configuration
 ├── requirements.txt        # Python dependencies
 ├── jobs/
-│   ├── main.py            # IoT data producer
+│   ├── iot_simulator.py   # IoT data producer
 │   └── spark-city.py      # Spark streaming job
 ├── config/                # Configuration files
 ├── data/                  # Local data storage
@@ -124,8 +122,9 @@ docker exec -it spark-master spark-submit --master spark://spark-master:7077 /op
 ## Configuration
 
 ### Environment Variables
+
 ```bash
-KAFKA_BOOTSTRAP_SERVERS=localhost:9092
+KAFKA_BOOTSTRAP_SERVERS=broker:29092
 VEHICLE_TOPIC=vehicle_data
 GPS_TOPIC=gps_data
 TRAFFIC_TOPIC=traffic_data
@@ -134,22 +133,20 @@ EMERGENCY_TOPIC=emergency_data
 ```
 
 ### AWS Configuration
+
 Set up AWS credentials in `~/.aws/credentials` or use IAM roles for production.
 
 ## Development
 
-### Running Tests
-```bash
-pytest tests/
-```
-
-### Code Quality
 ```bash
 # Linting
 pylint jobs/
 
 # Formatting
 black jobs/
+
+# Tests
+pytest tests/
 ```
 
 ## Deployment
@@ -170,36 +167,38 @@ python jobs/iot_simulator.py
 
 ## Monitoring
 
-- **Kafka:** `docker logs broker -f`
-- **Spark UI:** http://localhost:9090
-- **Zookeeper:** Port 2181
-- **Kafka Broker:** Port 9092
+| Service | Access |
+|---------|--------|
+| Spark UI | http://localhost:9090 |
+| Kafka logs | `docker logs broker -f` |
+| Spark logs | `docker logs spark-master -f` |
+| Zookeeper | Port 2181 |
+| Kafka Broker | Port 29092 (internal) / 9092 (external) |
 
 ## Troubleshooting
 
-**Issue:** Kafka connection refused  
-**Solution:** Ensure Docker containers are running: `docker ps`
-
-**Issue:** Topics not found  
-**Solution:** Create topics using commands in Quick Start section
-
-**Issue:** Spark job fails  
-**Solution:** Check Spark logs: `docker logs spark-master -f`
+| Issue | Solution |
+|-------|----------|
+| Kafka connection refused | `docker ps` — ensure all containers are running |
+| Topics not found | Run topic creation commands in Quick Start |
+| Spark job fails | `docker logs spark-master -f` |
+| Ivy cache error | `rm -rf /home/spark/.ivy2/cache`, re-submit job |
+| `python-dotenv` missing | `docker exec -u root spark-master pip install python-dotenv` |
 
 ## Performance
 
 - **Throughput:** ~100 messages/second
 - **Latency:** <50ms average
-- **Data Volume:** Processes 5 concurrent streams
-- **Scalability:** Horizontal scaling via Kafka partitions and Spark workers
+- **Streams:** 5 concurrent IoT topics
+- **Scalability:** Horizontal via Kafka partitions + Spark workers
 
 ## Roadmap
 
-- [ ] IoT data simulation
-- [ ] Kafka streaming
-- [ ] Docker containerization
-- [ ] Spark structured streaming
-- [ ] AWS S3 integration
+- [x] IoT data simulation
+- [x] Kafka streaming
+- [x] Docker containerization
+- [x] Spark structured streaming
+- [x] AWS S3 integration
 - [ ] Glue catalog setup
 - [ ] Redshift data warehouse
 - [ ] PowerBI dashboards
@@ -207,23 +206,19 @@ python jobs/iot_simulator.py
 ## Contributing
 
 1. Fork the repository
-2. Create feature branch (`git checkout -b feature/new-feature`)
-3. Commit changes (`git commit -m 'feat: add new feature'`)
-4. Push to branch (`git push origin feature/new-feature`)
-5. Open Pull Request
+2. Create feature branch: `git checkout -b feature/your-feature`
+3. Commit changes: `git commit -m 'feat: add your feature'`
+4. Push to branch: `git push origin feature/your-feature`
+5. Open a Pull Request
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) file
+MIT License — see [LICENSE](LICENSE)
 
 ## Contact
 
-** Project Maintainer:** [Minnobug](https://github.com/minnobug)
+**Project Maintainer:** [Minnobug](https://github.com/minnobug)
 
-[![Email](https://img.shields.io/badge/Email-leg448%40gmail.com-red?style=for-the-badge&logo=gmail)](mailto:leg448@gmail.com)
+
 [![GitHub](https://img.shields.io/badge/GitHub-minnobug-181717?style=for-the-badge&logo=github)](https://github.com/minnobug)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/le-van-minh-2129s)
-
----
-
-** Thank you! Happy coding! **
