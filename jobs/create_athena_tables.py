@@ -20,7 +20,6 @@ load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
 import boto3
 from botocore.exceptions import ClientError
 
-sys.path.insert(0, os.path.dirname(__file__))
 from config import configuration
 
 # ── Config ────────────────────────────────────────────────────────────────────
