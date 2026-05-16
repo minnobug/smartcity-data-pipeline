@@ -172,6 +172,8 @@ if __name__ == '__main__':
     producer_config = {
         'bootstrap.servers': KAFKA_BOOTSTRAP_SERVERS,
         'error_cb': lambda err: print(f'Kafka Error: {err}'),
+        'retries': 5,
+        'retry.backoff.ms': 1000,
     }
 
     producer = SerializingProducer(producer_config)
